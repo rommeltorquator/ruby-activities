@@ -1,20 +1,32 @@
-# Polymorphism with Duck Typing
+# Polymorphism with Duck Typing and Inheritance
 
 class Pizza
+    def bake
+        "Now baking"
+    end
+
     def crust_size(size)
         size.crust_size
     end
 end
 
-class ThinCrust
+class ThinCrust < Pizza
+    def bake
+        "#{crust_size} is now baking"
+    end
+
     def crust_size
-        puts "Thin Crust Pizza"
+        "Thin Crust Pizza"
     end
 end
 
-class ThickCrust
+class ThickCrust < Pizza
+    def bake
+        "#{crust_size} is now baking"
+    end
+
     def crust_size
-        puts "Thick Crust Pizza"
+        "Thick Crust Pizza"
     end
 end
 
@@ -24,5 +36,8 @@ managers_choice = Pizza.new
 thin_crust = ThinCrust.new
 thick_crust = ThickCrust.new
 
-belly_buster.crust_size(thin_crust)
-managers_choice.crust_size(thick_crust)
+puts thin_crust.bake
+puts thick_crust.bake
+
+puts belly_buster.crust_size(thin_crust)
+puts managers_choice.crust_size(thick_crust)
