@@ -1,19 +1,19 @@
-lst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, -11, -12, -13, -14, -15]
+# nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, -11, -12, -13, -14, -15]
+nums = []
 
 def count_positives_sum_negatives(lst)
     #your code here
-    positive = 0
-    negative = 0
-    arr = []
+    arr = [0, 0]
     
     lst.each do |num|
-        positive += 1 if num > 0
-        negative += num if num <= 0
+        arr[0] += 1 if num > 0
+        arr[1] += num if num < 0
     end
-    if lst.empty? == true
-      arr = []
-    else
-      arr.push(positive)
-      arr.push(negative)
-    end
+
+    lst.empty? == true ? arr = [] : arr
 end
+
+# arr = [10, 1]
+# puts arr[0] += 1
+
+p count_positives_sum_negatives(nums)
