@@ -1,0 +1,11 @@
+# inner join
+SELECT * FROM classrooms c INNER JOIN students s ON c.student_id = s.id;
+
+# left join
+SELECT * FROM classrooms c LEFT JOIN students s ON c.student_id = s.id;
+
+# right join
+SELECT * FROM classrooms c RIGHT JOIN students s ON c.student_id = s.id;
+
+# full join
+SELECT * FROM classrooms c FULL JOIN students s ON c.student_id = s.id;
