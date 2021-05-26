@@ -3,4 +3,4 @@ def find_uniq(arr)
     arr.each do |num|
         return num if num != x
     end
-  end
+end

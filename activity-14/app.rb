@@ -28,13 +28,15 @@ end
 
 class Roadster < Car
     def start
-        puts "#{@make} #{@model}'s engine is now running"
+        super
+        puts "#{@make} #{@model}'s manufacturing year is #{@year}"
     end
 end
 
-class Chevy < Car
+class Civic < Car
     def start
-        puts "#{@make} #{@model}'s engine starts now!"
+        super
+        puts "#{@make} #{@model} was made in year #{@year}}"
     end
 end
 
@@ -83,88 +85,29 @@ class Mechanic
 end
 
 # Dependency Inversion Principle
-class FriendsController < ApplicationController
-    # set_friends gets a specific friend with an id of params[:id]
-    before_action :set_friend, only: %i[ show edit update destroy ]
-  
-    # authenticate_user is an existing helper from devise, goes to sign in page
-    before_action :authenticate_user!, except: [ :index, :show ] # new, edit, create, update, destroy
-  
-    # correct_user is a created helper
-    before_action :correct_user, only: [ :edit, :update, :destroy ]
-  
-    # GET /friends or /friends.json
-    def index
-      @friends = Friend.all
+class Portfolio < ApplicationRecord
+    include Placeholder
+    has_many :technologies
+
+    # nested attributes
+    accepts_nested_attributes_for :technologies, reject_if: lambda { |attrs| attrs['name'].blank? } # check the new html file for changes, also check the portfolio controller
+
+    # validation
+    validates_presence_of :title, :body, :main_image, :thumb_image
+
+    # custom scope
+    def self.angular
+        where(subtitle: "Angular on rails")
     end
-  
-    # GET /friends/1 or /friends/1.json
-    def show
-    end
-  
-    # GET /friends/new
-    def new
-        # @friend = Friend.new
-        @friend = current_user.friends.build # new
-    end
-  
-    # GET /friends/1/edit
-    def edit
-    end
-  
-    # POST /friends or /friends.json
-    def create
-        # @friend = Friend.new(friend_params)
-        @friend = current_user.friends.build(friend_params) # new
-  
-        respond_to do |format|
-            if @friend.save
-                format.html { redirect_to @friend, notice: "Friend was successfully created." }
-                format.json { render :show, status: :created, location: @friend }
-            else
-                format.html { render :new, status: :unprocessable_entity }
-                format.json { render json: @friend.errors, status: :unprocessable_entity }
-            end
-        end
-    end
-  
-    # PATCH/PUT /friends/1 or /friends/1.json
-    def update
-        respond_to do |format|
-            if @friend.update(friend_params)
-                format.html { redirect_to @friend, notice: "Friend was successfully updated." }
-                format.json { render :show, status: :ok, location: @friend }
-            else
-                format.html { render :edit, status: :unprocessable_entity }
-                format.json { render json: @friend.errors, status: :unprocessable_entity }
-            end
-        end
-    end
-  
-    # DELETE /friends/1 or /friends/1.json
-    def destroy
-        @friend.destroy
-        respond_to do |format|
-            format.html { redirect_to friends_url, notice: "Friend was successfully destroyed." }
-            format.json { head :no_content }
-        end
-    end
-  
-    # checks if the logged in user_id has a friend with that kind of id
-    def correct_user
-        @friend = current_user.friends.find_by(id: params[:id])
-        redirect_to friends_path, notice: "not authorized to edit this friend" if @friend.nil?
-    end
-  
-    private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_friend
-    @friend = Friend.find(params[:id])
-    end    
-  
-    # Only allow a list of trusted parameters through.
-    # added the user_id
-    def friend_params
-    params.require(:friend).permit(:first_name, :last_name, :email, :phone, :twitter, :user_id)
+
+    # another custom scope
+    scope :ruby_on_rails_portfolio_items, -> { where(subtitle: "Ruby on rails") }
+
+    after_initialize :set_defaults # after new action has run, before create
+
+    # can also put defaults on the migration file
+    def set_defaults
+        self.main_image ||= Placeholder.image_generator(height: 600, width: 400) # go to concern folder
+        self.thumb_image ||= Placeholder.image_generator(height: 350, width: 200) # go to concern folder
     end
 end
